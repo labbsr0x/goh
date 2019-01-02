@@ -26,7 +26,8 @@ func (e *Error) Error() string {
 }
 
 // PanicIfError is just a wrapper to a panic call that propagates a custom Error when the err property != nil
-func PanicIfError(e Error) {
+func PanicIfError(message string, code int, err error) {
+	e := Error{Message: message, Code: code, Err: err}
 	if e.Err != nil {
 		logrus.Errorf(e.Error())
 		panic(e)
@@ -34,7 +35,8 @@ func PanicIfError(e Error) {
 }
 
 // Panic wraps a panic call propagating the given error parameter
-func Panic(e Error) {
+func Panic(message string, code int) {
+	e := Error{Message: message, Code: code}
 	logrus.Errorf(e.Error())
 	panic(e)
 }
