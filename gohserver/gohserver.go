@@ -13,7 +13,7 @@ import (
 // Use it by deferring on first line of any http handler
 func HandleError(w http.ResponseWriter) {
 	if r := recover(); r != nil {
-		if err, ok := r.(types.Error); ok {
+		if err, ok := r.(gohtypes.Error); ok {
 			logrus.Error(err)
 			http.Error(w, err.Message, err.Code)
 		} else {
@@ -29,7 +29,7 @@ func WriteJSONResponse(payload interface{}, status int, w http.ResponseWriter) {
 	w.WriteHeader(status)
 
 	err := json.NewEncoder(w).Encode(payload)
-	types.PanicIfError(types.Error{Message: fmt.Sprintf("Not possible to write %v response", status), Code: 500, Err: err})
+	gohtypes.PanicIfError(gohtypes.Error{Message: fmt.Sprintf("Not possible to write %v response", status), Code: 500, Err: err})
 
 	logrus.Infof("200 Response sent. Payload: %s", payload)
 }
