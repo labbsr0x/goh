@@ -1,2 +1,2 @@
-# gohooks
-Utility lib for writing web hooks
+# Goh
+Utility lib for writing extremely simple webhooks in go.
