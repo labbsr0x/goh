@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/abilioesteves/goh/types"
+	"github.com/abilioesteves/goh/gohtypes"
 )
 
 // HandleError handles unexpected errors, keeping the response message clean
