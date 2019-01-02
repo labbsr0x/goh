@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/abilioesteves/goh/gohtypes"
+	"github.com/sirupsen/logrus"
 )
 
 // HandleError handles unexpected errors, keeping the response message clean
