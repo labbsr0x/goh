@@ -10,10 +10,10 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+var stopCh = make(chan os.Signal)
+
 // GracefulStop cancels gracefully the running goRoutines
 func GracefulStop(cancel context.CancelFunc) {
-	stopCh := make(chan os.Signal)
-
 	signal.Notify(stopCh, syscall.SIGTERM)
 	signal.Notify(stopCh, syscall.SIGINT)
 
@@ -21,10 +21,12 @@ func GracefulStop(cancel context.CancelFunc) {
 	stop(0, cancel)
 }
 
+var osExit = os.Exit
+
 // stop stops this program
 func stop(returnCode int, cancel context.CancelFunc) {
 	logrus.Infof("Stopping execution...")
 	cancel()
 	time.Sleep(2 * time.Second)
-	os.Exit(returnCode)
+	osExit(returnCode)
 }
