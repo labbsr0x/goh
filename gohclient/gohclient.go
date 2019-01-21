@@ -49,18 +49,18 @@ func (c *Default) Delete(url string) (*http.Response, []byte, error) {
 	return c.request(url, "DELETE", nil)
 }
 
+var httpDo = (&http.Client{Timeout: time.Second * 10}).Do
+
 // request defines a generic method to execute http requests
 func (c *Default) request(url, method string, payload []byte) (httpResponse *http.Response, data []byte, err error) {
+	logrus.Debugf("Request body: %v", payload)
 	req, err := http.NewRequest(method, url, bytes.NewBuffer(payload))
 	if err == nil {
 		req.Header.Set("Content-Type", c.ContentType)
 
-		client := &http.Client{
-			Timeout: time.Second * 10,
-		}
 		logrus.Debugf("%v request=%v", method, req)
 
-		httpResponse, err = client.Do(req)
+		httpResponse, err = httpDo(req)
 		if err == nil {
 			defer func() {
 				if closeError := httpResponse.Body.Close(); closeError != nil {
