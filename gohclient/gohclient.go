@@ -20,12 +20,14 @@ type API interface {
 // Default defines a struct that handles with HTTP requests for a bindman webhook client
 type Default struct {
 	ContentType string
+	Accept      string
 }
 
 // New instantiates a default goh client
-func New(contentType string) *Default {
+func New(contentType, accept string) *Default {
 	return &Default{
 		ContentType: contentType,
+		Accept:      accept,
 	}
 }
 
@@ -57,6 +59,7 @@ func (c *Default) request(url, method string, payload []byte) (httpResponse *htt
 	req, err := http.NewRequest(method, url, bytes.NewBuffer(payload))
 	if err == nil {
 		req.Header.Set("Content-Type", c.ContentType)
+		req.Header.Set("Accept", c.Accept)
 
 		logrus.Debugf("%v request=%v", method, req)
 
