@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/abilioesteves/goh/gohtypes"
+	"github.com/labbsr0x/goh/gohtypes"
 	"github.com/sirupsen/logrus"
 )
 
