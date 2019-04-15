@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func TestNewClient(t *testing.T) {
+func TestNew(t *testing.T) {
 	defaultUrl, e := url.Parse("http://localhost:7070")
 	if e != nil {
 		t.Fatal(e)
@@ -24,19 +24,19 @@ func TestNewClient(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    *Client
+		want    *Default
 		wantErr bool
 	}{
 		{
 			name:    "use http.DefaultClient when nil httpClient parameter",
 			args:    args{nil, defaultUrl.String()},
-			want:    &Client{baseURL: defaultUrl, httpClient: http.DefaultClient},
+			want:    &Default{BaseURL: defaultUrl, HTTPClient: http.DefaultClient},
 			wantErr: false,
 		},
 		{
 			name:    "use http.Client passed as parameter",
 			args:    args{&http.Client{Timeout: time.Hour}, defaultUrl.String()},
-			want:    &Client{baseURL: defaultUrl, httpClient: &http.Client{Timeout: time.Hour}},
+			want:    &Default{BaseURL: defaultUrl, HTTPClient: &http.Client{Timeout: time.Hour}},
 			wantErr: false,
 		},
 		{
@@ -60,7 +60,7 @@ func TestNewClient(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := NewClient(tt.args.httpClient, tt.args.baseURL)
+			got, err := New(tt.args.httpClient, tt.args.baseURL)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("NewClient() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -93,21 +93,6 @@ func TestClient_request(t *testing.T) {
 		wantData   []byte
 		wantErr    bool
 	}{
-		{
-			name: "error when nil httpClient",
-			fields: fields{
-				baseURL:    &url.URL{Host: "localhost"},
-				httpClient: nil,
-			},
-			wantErr: true,
-		},
-		{
-			name: "error when nil baseURL",
-			fields: fields{
-				baseURL: nil,
-			},
-			wantErr: true,
-		},
 		{
 			name: "error parse url",
 			fields: fields{
@@ -182,12 +167,12 @@ func TestClient_request(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := &Client{
+			c := &Default{
 				UserAgent:   tt.fields.UserAgent,
 				ContentType: tt.fields.ContentType,
 				Accept:      tt.fields.Accept,
-				baseURL:     tt.fields.baseURL,
-				httpClient:  tt.fields.httpClient,
+				BaseURL:     tt.fields.baseURL,
+				HTTPClient:  tt.fields.httpClient,
 			}
 
 			// test do request if no error expected
@@ -240,7 +225,7 @@ func TestClient_request(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-				c.baseURL = parsed
+				c.BaseURL = parsed
 			}
 
 			gotResp, gotData, err := c.request(tt.args.path, tt.args.method, tt.args.body)
@@ -290,9 +275,9 @@ func TestClient_Put(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	c := &Client{
-		baseURL:    parsed,
-		httpClient: http.DefaultClient,
+	c := &Default{
+		BaseURL:    parsed,
+		HTTPClient: http.DefaultClient,
 	}
 
 	if _, _, err := c.Put(path, data); err != nil {
@@ -321,9 +306,9 @@ func TestClient_POST(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	c := &Client{
-		baseURL:    parsed,
-		httpClient: http.DefaultClient,
+	c := &Default{
+		BaseURL:    parsed,
+		HTTPClient: http.DefaultClient,
 	}
 
 	if _, _, err := c.Post(path, data); err != nil {
@@ -347,9 +332,9 @@ func TestClient_GET(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	c := &Client{
-		baseURL:    parsed,
-		httpClient: http.DefaultClient,
+	c := &Default{
+		BaseURL:    parsed,
+		HTTPClient: http.DefaultClient,
 	}
 
 	if _, _, err := c.Get(path); err != nil {
@@ -373,9 +358,9 @@ func TestClient_DELETE(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	c := &Client{
-		baseURL:    parsed,
-		httpClient: http.DefaultClient,
+	c := &Default{
+		BaseURL:    parsed,
+		HTTPClient: http.DefaultClient,
 	}
 
 	if _, _, err := c.Delete(path); err != nil {
