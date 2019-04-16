@@ -2,13 +2,14 @@ package gohclient
 
 import (
 	"bytes"
-	"github.com/go-errors/errors"
-	"github.com/sirupsen/logrus"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
+
+	"github.com/go-errors/errors"
+	"github.com/sirupsen/logrus"
 )
 
 // API defines an interface for helper methods that encapsulates http requests complexities
@@ -51,23 +52,23 @@ func New(httpClient *http.Client, baseURL string) (*Default, error) {
 }
 
 // Put wraps the call to http.NewRequest apis and properly submits a new HTTP POST request
-func (c *Default) Put(url string, data []byte) (*http.Response, []byte, error) {
-	return c.request(url, "PUT", data)
+func (c *Default) Put(path string, data []byte) (*http.Response, []byte, error) {
+	return c.request(path, "PUT", data)
 }
 
 // Post wraps the call to http.NewRequest apis and properly submits a new HTTP POST request
-func (c *Default) Post(url string, data []byte) (*http.Response, []byte, error) {
-	return c.request(url, "POST", data)
+func (c *Default) Post(path string, data []byte) (*http.Response, []byte, error) {
+	return c.request(path, "POST", data)
 }
 
 // Get wraps the call to http.NewRequest apis and properly submits a new HTTP GET request
-func (c *Default) Get(url string) (*http.Response, []byte, error) {
-	return c.request(url, "GET", nil)
+func (c *Default) Get(path string) (*http.Response, []byte, error) {
+	return c.request(path, "GET", nil)
 }
 
 // Delete wraps the call to http.NewRequest apis and properly submits a new HTTP DELETE request
-func (c *Default) Delete(url string) (*http.Response, []byte, error) {
-	return c.request(url, "DELETE", nil)
+func (c *Default) Delete(path string) (*http.Response, []byte, error) {
+	return c.request(path, "DELETE", nil)
 }
 
 // request defines a generic method to execute http requests
