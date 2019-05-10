@@ -31,5 +31,5 @@ func WriteJSONResponse(payload interface{}, status int, w http.ResponseWriter) {
 	err := json.NewEncoder(w).Encode(payload)
 	gohtypes.PanicIfError(fmt.Sprintf("Not possible to write %v response", status), 500, err)
 
-	logrus.Infof("200 Response sent. Payload: %s", payload)
+	logrus.Infof("%v Response sent. Payload: %s", status, payload)
 }
