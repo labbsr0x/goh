@@ -28,7 +28,9 @@ func WriteJSONResponse(payload interface{}, status int, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 
-	err := json.NewEncoder(w).Encode(payload)
+	jEncoder := json.NewEncoder(w)
+	jEncoder.SetEscapeHTML(false)
+	err := jEncoder.Encode(payload)
 	gohtypes.PanicIfError(fmt.Sprintf("Not possible to write %v response", status), 500, err)
 
 	logrus.Infof("%v Response sent. Payload: %s", status, payload)
